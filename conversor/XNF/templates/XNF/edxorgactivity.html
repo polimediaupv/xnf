@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TK2 | Edx.org Activity</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/conversor.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<!-- Mainly scripts -->
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="/static/js/inspinia.js"></script>
+<script src="/static/js/plugins/pace/pace.min.js"></script>
+<script src="/static/js/edxorgactivity.js"></script>
+<link href="/static/lib/c3-0.4.9/c3.css" rel="stylesheet" type="text/css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/static/lib/c3-0.4.9/c3.min.js"></script>
+
+<div id="wrapper">
+
+
+    {% include "XNF/sidebar.html" %}
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            {% include "XNF/topbar.html" %}
+        </div>
+        {% if user.is_authenticated %}
+        {% for group in user.groups.all %}
+                {% if group.name == 'edxorgactivity' %}
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Herramienta de conversión de cursos<small class="m-l-sm">XNF a edx</small></h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div id="login" class="row clearfix">
+                                <div class="col-md-2 column">
+                                    <button class="btn btn-primary btn-large" onclick="getinfocourses();">Refrescar</button>
+                                </div>
+                                <div class="col-md-10 column">
+                                     <div id="chart"></div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-md-12 column" id="informe">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+            {% include "XNF/unauthorized.html" %}
+        {% endif %}
+        {% include "XNF/footer.html" %}
+
+    </div>
+</div>
+</body>
+</html>

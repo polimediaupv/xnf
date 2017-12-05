@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TK2 | Transchapter</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/conversor.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<!-- Mainly scripts -->
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="/static/js/responsive-admin.js"></script>
+<script src="/static/js/plugins/pace/pace.min.js"></script>
+<script src="/static/js/transchapterv2.js"></script>
+
+
+<div id="wrapper">
+
+
+    {% include "XNF/sidebar.html" %}
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            {% include "XNF/topbar.html" %}
+        </div>
+        {% if user.is_authenticated %}
+         {% for group in user.groups.all %}
+                {% if group.name == 'transchapter' %}
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Herramienta para mover capitulos</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <p>
+                                Esta herramienta sirve para mover capitulos entre distintos cursos de la plataforma, usela con cuidado sobre todo si trabaja sobre producción.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input id="courses" type="hidden" value={{courses}}>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Origen</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row clearfix">
+                                <div class="col-md-6 column">
+                                     <select class="serverselect origen form-control" onchange="serverselect(this);">
+                                          <option>Seleccione el servidor de origen...</option>
+                                          {% for server in servers %}
+                                          <option value="{{server.id}}">{{server.name}}</option>
+                                          {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6 column">
+                                     <select class="courseselect origen form-control" onchange="courseselect(this)">
+                                          <option>Seleccione curso origen...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+
+                                <div class="capitulos origen col-md-12 column">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Destino</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row clearfix">
+                                <div class="col-md-6 column">
+                                      <select class="serverselect destino form-control" onchange="serverselect(this);">
+                                          <option>seleccione servidor destino...</option>
+                                          {% for server in servers %}
+                                          <option value="{{server.id}}">{{server.name}}</option>
+                                          {% endfor %}
+                                      </select>
+                                </div>
+                                <div class="col-md-6 column">
+                                     <select class="courseselect destino form-control" onchange="courseselect(this)">
+                                          <option>seleccione curso destino...</option>
+                                          <option>test</option>
+                                          <option>produccion</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="capitulos destino col-md-12 column">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+            {% include "XNF/unauthorized.html" %}
+        {% endif %}
+        {% include "XNF/footer.html" %}
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TK2 | Conversor</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/conversor.css" rel="stylesheet" type="text/css">
+    <!-- Data Tables -->
+    <link href="/static/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+    <link href="/static/css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Mainly scripts -->
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="/static/js/inspinia.js"></script>
+<script src="/static/js/plugins/pace/pace.min.js"></script>
+<!-- Data Tables -->
+<script src="/static/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="/static/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="/static/js/plugins/dataTables/dataTables.responsive.js"></script>
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function() {
+        $('.dataTables-example').dataTable({
+            responsive: true,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "js/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+            }
+        });
+
+        /* Init DataTables */
+        var oTable = $('#editable').dataTable();
+
+        /* Apply the jEditable handlers to the table */
+        oTable.$('td').editable( '../example_ajax.php', {
+            "callback": function( sValue, y ) {
+                var aPos = oTable.fnGetPosition( this );
+                oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+            },
+            "submitdata": function ( value, settings ) {
+                return {
+                    "row_id": this.parentNode.getAttribute('id'),
+                    "column": oTable.fnGetPosition( this )[2]
+                };
+            },
+
+            "width": "90%",
+            "height": "100%"
+        } );
+
+
+    });
+
+    function fnClickAddRow() {
+        $('#editable').dataTable().fnAddData( [
+            "Custom row",
+            "New row",
+            "New row",
+            "New row",
+            "New row" ] );
+
+    }
+</script>
+
+<div id="wrapper">
+
+
+    {% include "XNF/sidebar.html" %}
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            {% include "XNF/topbar.html" %}
+        </div>
+        {% if user.is_authenticated %}
+        {% for group in user.groups.all %}
+        {% if group.name == 'conversor' %}
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Herramienta de conversión de cursos<small class="m-l-sm"><img src="/static/img/logoxnf.svg" height="12"> a edx</small></h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <p>
+                                Esta herramienta sirve para convertir archivos en excel con formato <img src="/static/img/logoxnf.svg" height="12"> al formato de datos de edX.
+                                Selecciona el archivo de excel que deseas convertir y tras unos momentos se te ofrecerá para descarga el paquete de edx resultante (es decir, un fichero .tar comprimido con GNU Zip).
+                                El proceso de conversión consta de 2 etapas, en la primera etapa se sube el archivo al servidor y tras esto se realiza la conversión.
+                                Por favor no cierres el navegador durante este proceso.
+                                El fichero resultante lo puedes importar en tu curso en edX. Para descargar la plantilla del <a href="/static/data/templateXNF.xlsm"><img src="/static/img/logoxnf.svg" height="12"> pulse aquí <i class="fa fa-cloud-download"></i>.</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class ="row animated fadeInRight">
+                <div class="col-md-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Convertir XNF</h5>
+                        </div>
+                        <div class="ibox-content text-center border-left-right">
+                            <form action="{% url "conversor" %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <p>{{ form.non_field_errors }}</p>
+                            <p>
+                            <div class="spiner-example" id="uploadimg" hidden="true">
+                                Convirtiendo
+                                <div class="sk-spinner sk-spinner-cube-grid">
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                    <div class="sk-cube"></div>
+                                </div>
+                            </div>
+                            <div id="uploadbtn">
+                                <p>{{ form.input_excel.help_text | safe}} </p>
+                                <p>
+                                    {{ form.input_excel.errors }}
+                                <div class="btn btn-primary btn-large" onclick="realupload()">
+                                    <span><i class="fa fa-cloud-upload"></i>Seleccionar el archivo</span>
+                                </div>
+
+                                {{ form.input_excel }}
+                                </p>
+                            </div>
+
+
+                            <p><input id="convertir" class="invisible" type="submit" value="Convertir" /></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title">
+                            <h5>Conversiones antiguas</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Resultado</th>
+                                    <th>CSV</th>
+                                    <th>Politicas</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for curso in targz%}
+                                <tr>
+                                    <td>{{curso.lastmodified}}</td>
+                                    <td>{{curso.user}}</td>
+                                    <td>{{curso.name}}</td>
+                                    <td class="text-center link-block"><a href="/static/{{curso.user}}/{{curso.name}}/{{curso.name}}.tar.gz"><i class="fa fa-cloud-download"></i>Descargar</a></td>
+                                    <td class="text-center link-block"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" onclick='$("input[name=coursepath]")[0].value="/tmp/importedfiles/{{curso.user}}/{{curso.name}}/"'><i class="fa fa-cloud-upload"></i>Agregar CSV</button></td>
+                                    <td class="text-center link-block"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalpolicies" onclick='$("input[name=coursepath]")[0].value="/tmp/importedfiles/{{curso.user}}/{{curso.name}}/"'><i class="fa fa-cloud-upload"></i>Agregar politicas</button></td>
+                                </tr>
+                                {% endfor %}
+                                <div class="modal inmodal in" id="myModalpolicies" tabindex="-1" role="dialog" aria-hidden="false">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content animated fadeIn">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                                <i class="fa fa-gears modal-icon"></i>
+                                                <h4 class="modal-title">Combinar politicas</h4>
+                                                <small>Selecciona el tarball del curso para combinar sus politicas avanzadas.</small>
+                                            </div>
+                                            <form action="{% url "addPoliciesconversion" %}" method="post" enctype="multipart/form-data">
+                                            <div class="modal-body">
+                                                <div class="ibox-content">
+                                                    <div class="row">
+                                                        <div class="col-md-12"  id="filepolicies">
+                                                            <div id="filechosenpolicies">
+                                                                <h4>Ningun archivo seleccionado.</h4>
+                                                                <p>Seleccione el .tar.gz a subir:</p>
+
+                                                            </div>
+                                                            <p class="text-center">
+                                                                <a href="#" id="fakeuploadbuttonpolicies"><i class="fa fa-cloud-upload big-icon"></i></a>
+                                                                 <input type="text" name="coursepath" style="display: none;"><br>
+                                                                <input onchange="changedInputPolicies();" type="file" id="uploadbuttonpolicies" style="display: none;">
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-12" id="translatingpolicies" hidden="true">
+
+                                                            Preparando la tarea de agregación espere mientras se sube el tarball.
+
+                                                            <div class="spiner-example">
+                                                                <div class="sk-spinner sk-spinner-cube-grid">
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button id="cerrarmodalpolicies" type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                                                <input id="addPolicies" class="btn btn-primary disabled" value="addPolicies" />
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal inmodal in" id="myModal" tabindex="-1" role="dialog" aria-hidden="false">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content animated fadeIn">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                                <i class="fa fa-gears modal-icon"></i>
+                                                <h4 class="modal-title">Agregar CSV</h4>
+                                                <small>Selecciona el csv complementario del curso para actualizar su contenido.</small>
+                                            </div>
+                                            <form action="{% url "addCSVconversion" %}" method="post" enctype="multipart/form-data">
+                                            <div class="modal-body">
+                                                <div class="ibox-content">
+                                                    <div class="row">
+                                                        <div class="col-md-12"  id="file">
+                                                            <div id="filechosen">
+                                                                <h4>Ningun archivo seleccionado.</h4>
+                                                                <p>Seleccione el CSV a subir:</p>
+
+                                                            </div>
+                                                            <p class="text-center">
+                                                                <a href="#" id="fakeuploadbutton"><i class="fa fa-cloud-upload big-icon"></i></a>
+                                                                 <input type="text" name="coursepath" style="display: none;"><br>
+                                                                <input onchange="changedInput();" type="file" id="uploadbutton" style="display: none;">
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-12" id="translating" hidden="true">
+
+                                                            Preparando la tarea de agregación espere mientras se sube el CSV.
+
+                                                            <div class="spiner-example">
+                                                                <div class="sk-spinner sk-spinner-cube-grid">
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                    <div class="sk-cube"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button id="cerrarmodal" type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                                                <input id="addCSV" class="btn btn-primary disabled" value="addCSV" />
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Resultado</th>
+                                    <th>CSV</th>
+                                    <th>Politicas</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        {% include "XNF/unauthorized.html" %}
+        {% endif %}
+        {% include "XNF/footer.html" %}
+
+    </div>
+</div>
+</body>
+
+<script>
+    function activatefilter(check){
+        if (check.checked)
+        {
+            $("#query_filter").removeAttr("disabled")
+        }
+        else
+        {
+            $("#query_filter").attr("disabled","true")
+            $("#query_filter").val("")
+        }
+
+    }
+
+    function realupload() {
+        document.getElementById("uploadimg").hidden=false;
+        document.getElementById("uploadbtn").hidden=true;
+        document.getElementById("id_input_excel").click();
+    }
+
+    function convert() {
+        document.getElementById("convertir").click();
+    }
+
+    function changedInputPolicies(){
+        $("#filechosenpolicies").empty();
+        $("#filechosenpolicies").append('<h4> Selected ' + $('#uploadbuttonpolicies')[0].files[0].name + '</h4>');
+        $($("#addPolicies")[0]).removeClass("disabled");
+    }
+
+    function changedInput(){
+        $("#filechosen").empty();
+        $("#filechosen").append('<h4> Selected ' + $('#uploadbutton')[0].files[0].name + '</h4>');
+        $($("#addCSV")[0]).removeClass("disabled");
+    }
+
+    $("#fakeuploadbuttonpolicies").click(function(e){
+        e.preventDefault();
+        $("#uploadbuttonpolicies").trigger('click');
+    });
+
+     $("#fakeuploadbutton").click(function(e){
+        e.preventDefault();
+        $("#uploadbutton").trigger('click');
+    });
+    /* hasta */
+
+
+    $("#addPolicies").click(function(){
+            $("#filepolicies").attr('hidden', true);
+            $("#translatingpolicies").attr('hidden', false);
+            var formData = new FormData();
+            formData.append('csrfmiddlewaretoken',"{{ csrf_token }}");
+            formData.append('coursepath',$("input[name=coursepath]")[0].value);
+            formData.append('file', $( '#uploadbuttonpolicies' )[0].files[0]);
+            $.ajax({
+                url: "{% url "addPoliciesconversion" %}", //changeurl
+                type: 'POST',
+                data: formData,
+                async: false,
+                success: function (data) {
+                    $("form")[0].reset();
+                    $("#filechosenpolicies").empty()
+                    $("#filechosenpolicies").append('<h4>No file chosen</h4><p>Select a course to upload:</p>')
+                    $($("#addPolicies")[0]).addClass("disabled");
+                    $("#cerrarmodalpolicies").click();
+                    $("#filepolicies").attr('hidden', false);
+                    $("#translatingpolicies").attr('hidden', true);
+                },
+                error: function (data) {
+                    $("form")[0].reset();
+                    $("#filechosenpolicies").empty()
+                    $("#filechosenpolicies").append('<h4>Ningun archivo seleccionado.</h4><p>Ha sucedido un error durante la subida, vuelva a seleccionar el archivo:</p>')
+                    $($("#addPolicies")[0]).addClass("disabled");
+                    $("#filepolicies").attr('hidden', false);
+                    $("#translatingpolicies").attr('hidden', true);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            return false;
+        });
+
+    $("#addCSV").click(function(){
+            $("#file").attr('hidden', true);
+            $("#translating").attr('hidden', false);
+            //$("#languajes").attr('hidden', true);
+            var formData = new FormData();
+            formData.append('csrfmiddlewaretoken',"{{ csrf_token }}");
+            formData.append('coursepath',$("input[name=coursepath]")[0].value);
+            formData.append('file', $( '#uploadbutton' )[0].files[0]);
+            $.ajax({
+                url: "{% url "addCSVconversion" %}",
+                type: 'POST',
+                data: formData,
+                async: false,
+                success: function (data) {
+                    $("form")[0].reset();
+                    $("#filechosen").empty()
+                    $("#filechosen").append('<h4>No file chosen</h4><p>Select a course to upload:</p>')
+                    $($("#addCSV")[0]).addClass("disabled");
+                    $("#cerrarmodal").click();
+                    $("#file").attr('hidden', false);
+                    $("#translating").attr('hidden', true);
+                },
+                error: function (data) {
+                    $("form")[0].reset();
+                    $("#filechosen").empty()
+                    $("#filechosen").append('<h4>Ningun archivo seleccionado.</h4><p>Ha sucedido un error durante la subida, vuelva a seleccionar el archivo:</p>')
+                    $($("#addCSV")[0]).addClass("disabled");
+                    $("#file").attr('hidden', false);
+                    $("#translating").attr('hidden', true);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            return false;
+        });
+
+    $("#searchInput").keyup(function() {
+        var rows = $("#translatedata").find("tr").hide();
+        var data = this.value.split(" ");
+        $.each(data, function(i, v) {
+            rows.filter(":contains('" + v + "')").show();
+        });
+    });
+</script>
+</html>

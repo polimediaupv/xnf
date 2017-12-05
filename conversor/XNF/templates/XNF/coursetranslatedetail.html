@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+{% load humanize %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TK2 | Translate progress detail</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/conversor.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<!-- Mainly scripts -->
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="/static/js/inspinia.js"></script>
+<script src="/static/js/plugins/pace/pace.min.js"></script>
+<script src="/static/js/coursetranslatedetail.js"></script>
+
+
+
+<div id="wrapper">
+
+
+    {% include "XNF/sidebar.html" %}
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            {% include "XNF/topbar.html" %}
+        </div>
+        {% if user.is_authenticated %}
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row animated fadeInRight">
+                <div class="col-md-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Course About</h5>
+                        </div>
+                        <div>
+                            <div class="ibox-content text-center border-left-right">
+
+                            </div>
+                            <div class="ibox-content profile-content">
+                                <div class="carousel slide" id="carousel1">
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        {{ originalabout|safe }}
+                                    </div>
+                                </div>
+                                <a data-slide="prev" href="#carousel1" class="left carousel-control">
+                                    <span class="icon-prev"></span>
+                                </a>
+                                <a data-slide="next" href="#carousel1" class="right carousel-control">
+                                    <span class="icon-next"></span>
+                                </a>
+                            </div>
+
+                                <div class="user-button">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                             <a href="../../static/{{user.username}}/{{course}}.original.tar.gz" class="btn btn-primary btn-sm btn-block"><i class="fa fa-cloud-download"></i> Original Course </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="../getCourseTranslation?courseId={{course}}" class="btn btn-default btn-sm btn-block"><i class="fa fa-cloud-download"></i> Translated Course</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                    </div>
+                <div class="col-md-8">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>File Status</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                                <div class="full-height-scroll">
+                                    <div class="feed-activity-list" id="translatedata">
+
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% else %}
+            {% include "XNF/unauthorized.html" %}
+        {% endif %}
+        {% include "XNF/footer.html" %}
+
+    </div>
+</div>
+</body>
+</html>

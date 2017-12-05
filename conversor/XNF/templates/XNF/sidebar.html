@@ -1,0 +1,74 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu" style="display: block;">
+                <li class="nav-header">
+                    {% if user.is_authenticated %}
+                    <div class="dropdown profile-element"><span>
+                            <img id="userimg" alt="image" class="img-circle" src="/static/img/nouser.jpg" style="max-height: 64px;" />
+                             </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ user.username }}</strong><b class="caret"></b>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                 <li><a href="../profile" %}">Profile</a></li>
+                                 <li><a href="{% url "mysite_logout" %}">Logout</a></li>
+                            </ul>
+                    </div>
+                    {% else %}
+                    <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Unauthorized</strong>
+                             </span> <span class="text-muted text-xs block">Login <b class="caret"></b></span> </span> </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="/login/">Login</a></li>
+                            </ul>
+                    </div>
+                    {% endif %}
+                    <div class="logo-element">
+                        <img src="/static/img/logoxnfw.svg" height="22">
+                    </div>
+                </li>
+                {% for group in user.groups.all %}
+                    {% if group.name == 'coursecalendar' %}
+                <li class="navli" id="coursecalendar">
+                    <a href="../coursecalendar"><i class="fa fa-calendar"></i> <span class="nav-label">Calendar</span></a>
+                </li>
+                    {% endif %}
+                    {% if group.name == 'transchapter' %}             
+                <li class="navli" id="transchapterv2">
+                    <a href="../transchapterv2"><i class="fa fa-files-o"></i> <span class="nav-label">Transchapter v2</span></a>
+                </li>
+                    {% endif %}
+                    {% if group.name == 'conversor' %}
+                <li class="navli">
+                    <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Conversor</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="navli" id="conversor"><a href="../conversor">Conversor</a></li>
+                    </ul>
+                </li>
+                    {% endif %}                                      
+            {% endfor %}
+
+            </ul>
+
+        </div>
+    </nav>
+
+    <script>
+    $( document ).ready(function() {
+        $( ".navli" ).each(function( index ) {
+            if (window.location.href.indexOf($(this)[0].id) > 0)
+            {
+                $($(this)[0]).addClass("active");
+            }
+        });
+        (function(){
+             console.log("afasf");
+             newsrc="";
+             $.getJSON('http://picasaweb.google.com/data/entry/api/user/{{ user.username }}?alt=json',function(data){
+                newsrc = "";
+                newsrc = data.entry.gphoto$thumbnail.$t;
+                $("#userimg").attr("src",newsrc);
+             })
+        })();
+    });
+    </script>
