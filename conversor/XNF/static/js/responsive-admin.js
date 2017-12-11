@@ -1,11 +1,4 @@
-/*
- *
- *   INSPINIA - Responsive Admin Theme
- *   version 2.0
- *
- */
-
-$(document).ready(function () {
+c$(document).ready(function () {
 
     // Add body-small class if window less than 768px
     if ($(this).width() < 769) {

@@ -1,10 +1,5 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&lang=en");
-/*
- *
- *   INSPINIA - Responsive Admin Theme
- *   version 2.0
- *
-*/
+
 h1,
 h2,
 h3,
@@ -2378,7 +2373,7 @@ label.error {
     margin-bottom: 20px;
 }
 /* Notifie */
-.cg-notify-message.inspinia-notify {
+.cg-notify-message.responsive-admin-notify {
     background: #fff;
     padding: 0;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -2388,16 +2383,16 @@ label.error {
     margin-top: 30px;
     color: inherit;
 }
-.inspinia-notify.alert-warning {
+.responsive-admin-notify.alert-warning {
     border-left: 6px solid #f8ac59;
 }
-.inspinia-notify.alert-success {
+.responsive-admin-notify.alert-success {
     border-left: 6px solid #1c84c6;
 }
-.inspinia-notify.alert-danger {
+.responsive-admin-notify.alert-danger {
     border-left: 6px solid #ed5565;
 }
-.inspinia-notify.alert-info {
+.responsive-admin-notify.alert-info {
     border-left: 6px solid #1ab394;
 }
 /* Image cropper style */
@@ -5957,12 +5952,7 @@ body.rtls.top-navigation .footer.fixed {
 .ultra-skin:hover {
     background: #1a2d40;
 }
-/*
- *
- *   SKIN 1 - INSPINIA - Responsive Admin Theme
- *   NAME - Blue light
- *
-*/
+
 .skin-1 .minimalize-styl-2 {
     margin: 14px 5px 5px 30px;
 }
@@ -6060,12 +6050,7 @@ body.skin-1 {
 .skin-1 .nav.nav-tabs > li.active {
     background: transparent;
 }
-/*
- *
- *   SKIN 2 - INSPINIA - Responsive Admin Theme
- *   NAME - Inspinia Ultra
- *
-*/
+
 body.skin-2 {
     color: #565758 !important;
 }
@@ -6207,12 +6192,7 @@ body.skin-2 #wrapper {
 .skin-2 .nav.nav-tabs > li.active {
     background: transparent;
 }
-/*
- *
- *   SKIN 3 - INSPINIA - Responsive Admin Theme
- *   NAME - Yellow/purple
- *
-*/
+
 .skin-3 .minimalize-styl-2 {
     margin: 14px 5px 5px 30px;
 }
